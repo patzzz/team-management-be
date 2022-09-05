@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.patzzzcode.manager.bo.Person;
 import com.patzzzcode.manager.repositories.PersonRepository;
+import com.patzzzcode.manager.services.AssignedPersonsService;
 import com.patzzzcode.manager.services.PersonService;
 
 @RestController
@@ -24,6 +25,8 @@ public class PersonController {
 
   @Autowired
   private PersonService personService;
+  @Autowired
+  private AssignedPersonsService assignedPersonsService;
 
   @RequestMapping(value = "/api/person", method = RequestMethod.POST)
   public ResponseEntity<Object> createPerson(@RequestBody Person person) {
@@ -84,6 +87,29 @@ public class PersonController {
       } else {
         return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
       }
+    } catch (Exception e) {
+      return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(value = "/api/person/getAssignedProjects", method = RequestMethod.GET)
+  public ResponseEntity<Object> getAssignedProjects(@RequestParam Long personId) {
+    try {
+      Person existingPerson = personRepository.findById(personId).orElse(null);
+      if (Objects.nonNull(existingPerson)) {
+        return new ResponseEntity<Object>(assignedPersonsService.getAssignedProjects(existingPerson), HttpStatus.OK);
+      } else {
+        return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+      }
+    } catch (Exception e) {
+      return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(value = "/api/person/getPersonsByAvailabilityStatus", method = RequestMethod.GET)
+  public ResponseEntity<Object> getPersonsByAvailabilityStatus(@RequestParam String status) {
+    try {
+      return new ResponseEntity<Object>(personService.getByAvailabilityStatus(status), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }

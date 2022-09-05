@@ -1,5 +1,7 @@
 package com.patzzzcode.manager.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ public class AssignedPersonsService {
 
   @Autowired
   private AssignedPersonRepository assignedPersonRepository;
+
   @Autowired
   private PersonService personService;
 
@@ -32,5 +35,27 @@ public class AssignedPersonsService {
       personService.setPersonAvailableStatus(person, project, false);
       return newAssign;
     }
+  }
+
+  public List<Person> getAssignedPersons(Project project) {
+    List<AssignedPerson> assignedPersons = assignedPersonRepository.findByProject(project);
+    List<Person> persons = new ArrayList<Person>();
+
+    for (AssignedPerson assignedPerson : assignedPersons) {
+      persons.add(assignedPerson.getPerson());
+    }
+
+    return persons;
+  }
+
+  public List<Project> getAssignedProjects(Person person) {
+    List<AssignedPerson> assignedPersons = assignedPersonRepository.findByPerson(person);
+    List<Project> projects = new ArrayList<Project>();
+
+    for (AssignedPerson assignedPerson : assignedPersons) {
+      projects.add(assignedPerson.getProject());
+    }
+
+    return projects;
   }
 }

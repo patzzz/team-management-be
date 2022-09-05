@@ -1,5 +1,7 @@
 package com.patzzzcode.manager.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,14 @@ public class PersonService {
       person.setAssignedProject(project);
     }
     personRepository.save(person);
+  }
+
+  public List<Person> getByAvailabilityStatus(String status) {
+    if (status.equals("AVAILABLE")) {
+      return personRepository.findByIsAvailable(true);
+    } else {
+      return personRepository.findByIsAvailable(false);
+    }
   }
 
 }

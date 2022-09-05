@@ -126,4 +126,29 @@ public class ProjectController {
       return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
+
+  @RequestMapping(value = "/api/project/getProjectByStatus", method = RequestMethod.GET)
+  public ResponseEntity<Object> getProjectByStatus(@RequestParam String status) {
+    try {
+      List<Project> projects = projectRepository.findByStatus(status);
+      return new ResponseEntity<Object>(projects, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(value = "/api/project/getAssignedPersons", method = RequestMethod.GET)
+  public ResponseEntity<Object> getAssignedPersons(@RequestParam Long projectId) {
+    try {
+      Project existingProject = projectRepository.findById(projectId).orElse(null);
+      if (Objects.nonNull(existingProject)) {
+        return new ResponseEntity<Object>(assignedPersonsService.getAssignedPersons(existingProject), HttpStatus.OK);
+      } else {
+        return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+      }
+    } catch (Exception e) {
+      return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }
