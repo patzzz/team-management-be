@@ -26,16 +26,6 @@ public class PersonService {
     return newPerson;
   }
 
-  public Person updatePerson(Person existingPerson, Person person) {
-    existingPerson.setFirstName(person.getFirstName());
-    existingPerson.setLastName(person.getLastName());
-    existingPerson.setPosition(person.getPosition());
-    existingPerson.setIsAvailable(person.getIsAvailable());
-    existingPerson.setAssignedProject(person.getAssignedProject());
-    personRepository.save(existingPerson);
-    return existingPerson;
-  }
-
   public void setPersonAvailableStatus(Person person, Project project, Boolean status) {
     if (status) {
       person.setIsAvailable(true);
